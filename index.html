@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IPIFS — Gerador de Material Didático</title>
+<link rel="icon" id="favicon" type="image/png" href="assets/img/IPIFS_simbolo1.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -11,21 +12,22 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --ink: #1a1a2e;
-    --ink-2: #3d3d5c;
-    --ink-3: #7a7a9a;
-    --surface: #f7f6f2;
-    --surface-2: #eeecea;
+    --ink: #263C4E;
+    --ink-2: #3a5568;
+    --ink-3: #7a95a5;
+    --surface: #FBECDC;
+    --surface-2: #f4e3d0;
     --surface-card: #ffffff;
-    --accent: #2E4ED4;
-    --accent-light: #e8ecfa;
-    --accent-mid: #5b74e8;
+    --accent: #30B0D5;
+    --accent-light: #e0f5fb;
+    --accent-mid: #44bfd4;
+    --tan: #D8B690;
     --success: #0f6e56;
     --success-bg: #e1f5ee;
     --danger: #a32d2d;
     --danger-bg: #fcebeb;
-    --border: rgba(26,26,46,0.1);
-    --border-strong: rgba(26,26,46,0.2);
+    --border: rgba(38,60,78,0.1);
+    --border-strong: rgba(38,60,78,0.2);
     --radius: 12px;
     --radius-sm: 8px;
   }
@@ -40,11 +42,93 @@
     line-height: 1.6;
   }
 
+  /* PASSWORD GATE */
+  #password-gate {
+    position: fixed;
+    inset: 0;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 2rem;
+  }
+  .login-card {
+    background: var(--surface-card);
+    border-radius: 16px;
+    padding: 2.75rem 2rem 2.25rem;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+  }
+  .login-logo { margin-bottom: 1.75rem; }
+  .login-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+  }
+  .login-sub {
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .login-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-align: left;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .login-input-wrap { position: relative; margin-bottom: 1rem; }
+  .login-input {
+    width: 100%;
+    height: 46px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 0 44px 0 14px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .login-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(48,176,213,0.15);
+    background: #fff;
+  }
+  .login-toggle-pw {
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: var(--ink-3); padding: 4px;
+    display: flex; align-items: center;
+  }
+  .login-toggle-pw svg { width: 18px; height: 18px; }
+  .btn-login {
+    width: 100%; height: 46px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: var(--radius-sm);
+    font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 500;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .btn-login:hover { background: #25a0c4; }
+  .login-error { display: none; margin-top: 0.75rem; font-size: 13px; color: var(--danger); }
+  .login-error.show { display: block; }
+
   /* HEADER */
   header {
     background: var(--ink);
     color: #fff;
-    padding: 2.5rem 2rem 2rem;
+    padding: 2rem 2rem;
     position: relative;
     overflow: hidden;
   }
@@ -53,7 +137,7 @@
     position: absolute;
     top: -60px; right: -60px;
     width: 260px; height: 260px;
-    border: 1px solid rgba(255,255,255,0.06);
+    border: 1px solid rgba(48,176,213,0.1);
     border-radius: 50%;
   }
   header::after {
@@ -61,646 +145,342 @@
     position: absolute;
     top: -20px; right: 40px;
     width: 140px; height: 140px;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(48,176,213,0.12);
     border-radius: 50%;
   }
   .header-inner {
     max-width: 760px;
     margin: 0 auto;
     position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
   }
+  .header-logo-mark { flex-shrink: 0; height: 52px; width: auto; margin-top: 4px; }
+  .header-logo-mark img { height: 52px; width: auto; display: block; }
+  .header-text { flex: 1; }
   .header-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(48,176,213,0.15);
+    border: 1px solid rgba(48,176,213,0.25);
     border-radius: 100px;
     padding: 4px 14px;
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 12px; font-weight: 500;
     letter-spacing: 0.06em;
     color: rgba(255,255,255,0.8);
     text-transform: uppercase;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
   }
   header h1 {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
     font-weight: 400;
     line-height: 1.15;
     letter-spacing: -0.02em;
     color: #fff;
     margin-bottom: 0.75rem;
   }
-  header h1 em {
-    font-style: italic;
-    color: #a8b8ff;
-  }
-  header p {
-    font-size: 15px;
-    color: rgba(255,255,255,0.55);
-    max-width: 480px;
-    font-weight: 300;
-  }
+  header h1 em { font-style: italic; color: var(--tan); }
+  header p { font-size: 15px; color: rgba(255,255,255,0.55); max-width: 480px; font-weight: 300; }
 
   /* STEPS BAR */
-  .steps-bar {
-    background: var(--ink-2);
-    padding: 0 2rem;
-  }
-  .steps-inner {
-    max-width: 760px;
-    margin: 0 auto;
-    display: flex;
-    gap: 0;
-  }
+  .steps-bar { background: var(--ink-2); padding: 0 2rem; }
+  .steps-inner { max-width: 760px; margin: 0 auto; display: flex; }
   .step-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    display: flex; align-items: center; gap: 10px;
     padding: 0.9rem 1.2rem 0.9rem 0;
-    font-size: 13px;
-    color: rgba(255,255,255,0.4);
-    font-weight: 400;
-    position: relative;
+    font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 400;
     flex-shrink: 0;
   }
   .step-item.active { color: rgba(255,255,255,0.9); }
   .step-item.done { color: rgba(255,255,255,0.5); }
   .step-num {
-    width: 22px; height: 22px;
-    border-radius: 50%;
+    width: 22px; height: 22px; border-radius: 50%;
     border: 1px solid rgba(255,255,255,0.2);
     display: flex; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 500;
-    flex-shrink: 0;
+    font-size: 11px; font-weight: 500; flex-shrink: 0;
   }
-  .step-item.active .step-num {
-    background: var(--accent-mid);
-    border-color: var(--accent-mid);
-    color: #fff;
-  }
-  .step-item.done .step-num {
-    background: rgba(255,255,255,0.15);
-    border-color: transparent;
-  }
-  .step-sep {
-    color: rgba(255,255,255,0.15);
-    font-size: 16px;
-    margin-right: 1.2rem;
-    align-self: center;
-  }
+  .step-item.active .step-num { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .step-item.done .step-num { background: rgba(255,255,255,0.15); border-color: transparent; }
+  .step-sep { color: rgba(255,255,255,0.15); font-size: 16px; margin-right: 1.2rem; align-self: center; }
 
   /* MAIN */
-  main {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 2.5rem 2rem 4rem;
-  }
+  main { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
 
   /* CARD */
-  .card {
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
+  .card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   .card + .card { margin-top: 1.25rem; }
-
-  .card-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .card-icon {
-    width: 36px; height: 36px;
-    border-radius: var(--radius-sm);
-    background: var(--accent-light);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
+  .card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .card-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--accent-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .card-icon svg { width: 18px; height: 18px; color: var(--accent); }
-  .card-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--ink);
-  }
-  .card-subtitle {
-    font-size: 13px;
-    color: var(--ink-3);
-    font-weight: 400;
-  }
+  .card-title { font-size: 15px; font-weight: 500; color: var(--ink); }
+  .card-subtitle { font-size: 13px; color: var(--ink-3); font-weight: 400; }
   .card-body { padding: 1.5rem; }
 
   /* URL CONFIG */
-  .url-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
+  .url-row { display: flex; gap: 8px; align-items: center; }
   .url-input-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 0;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    transition: border-color 0.15s;
+    flex: 1; display: flex; align-items: center;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm); overflow: hidden; transition: border-color 0.15s;
   }
-  .url-input-wrap:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(46,78,212,0.1);
-  }
+  .url-input-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48,176,213,0.12); }
   .url-prefix {
-    padding: 0 10px;
-    font-size: 12px;
-    color: var(--ink-3);
-    background: var(--surface-2);
-    border-right: 1px solid var(--border);
-    height: 38px;
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    font-weight: 500;
+    padding: 0 10px; font-size: 12px; color: var(--ink-3);
+    background: var(--surface-2); border-right: 1px solid var(--border);
+    height: 38px; display: flex; align-items: center; white-space: nowrap; font-weight: 500;
   }
   .url-input-wrap input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    padding: 0 12px;
-    height: 38px;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--ink);
-    outline: none;
+    flex: 1; border: none; background: transparent;
+    padding: 0 12px; height: 38px; font-size: 14px;
+    font-family: 'DM Sans', sans-serif; color: var(--ink); outline: none;
   }
   .btn-save-url {
-    padding: 0 16px;
-    height: 38px;
-    background: var(--ink);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.15s;
-    white-space: nowrap;
+    padding: 0 16px; height: 38px; background: var(--ink); color: #fff;
+    border: none; border-radius: var(--radius-sm); font-size: 13px;
+    font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer;
+    transition: opacity 0.15s; white-space: nowrap;
   }
   .btn-save-url:hover { opacity: 0.85; }
-  .url-saved-msg {
-    font-size: 12px;
-    color: var(--success);
-    margin-top: 8px;
-    display: none;
-    align-items: center;
-    gap: 5px;
-    font-weight: 500;
-  }
+  .url-saved-msg { font-size: 12px; color: var(--success); margin-top: 8px; display: none; align-items: center; gap: 5px; font-weight: 500; }
   .url-saved-msg.show { display: flex; }
 
   /* TEXTAREA */
-  .textarea-wrap {
-    position: relative;
-  }
+  .textarea-wrap { position: relative; }
   textarea {
-    width: 100%;
-    min-height: 280px;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    background: var(--surface);
-    padding: 1rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--ink);
-    resize: vertical;
-    outline: none;
+    width: 100%; min-height: 280px;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); padding: 1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 14px; line-height: 1.7;
+    color: var(--ink); resize: vertical; outline: none;
     transition: border-color 0.15s, box-shadow 0.15s;
   }
   textarea::placeholder { color: var(--ink-3); }
-  textarea:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(46,78,212,0.1);
-    background: #fff;
-  }
+  textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(48,176,213,0.12); background: #fff; }
   .char-count {
-    position: absolute;
-    bottom: 10px; right: 12px;
-    font-size: 12px;
-    color: var(--ink-3);
-    pointer-events: none;
-    background: var(--surface);
-    padding: 2px 6px;
-    border-radius: 4px;
+    position: absolute; bottom: 10px; right: 12px;
+    font-size: 12px; color: var(--ink-3); pointer-events: none;
+    background: var(--surface); padding: 2px 6px; border-radius: 4px;
   }
 
   /* FILE DROP */
   .file-drop {
-    border: 1.5px dashed var(--border-strong);
-    border-radius: var(--radius-sm);
-    padding: 1.5rem;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.15s;
-    margin-top: 1rem;
-    background: var(--surface);
+    border: 1.5px dashed var(--border-strong); border-radius: var(--radius-sm);
+    padding: 1.5rem; text-align: center; cursor: pointer;
+    transition: all 0.15s; margin-top: 1rem; background: var(--surface);
   }
-  .file-drop:hover, .file-drop.drag-over {
-    border-color: var(--accent);
-    background: var(--accent-light);
-  }
+  .file-drop:hover, .file-drop.drag-over { border-color: var(--accent); background: var(--accent-light); }
   .file-drop p { font-size: 13px; color: var(--ink-3); margin-top: 6px; }
-  .file-drop .file-icon {
-    width: 32px; height: 32px;
-    margin: 0 auto 8px;
-    color: var(--ink-3);
-  }
-  .file-name {
-    display: none;
-    font-size: 13px;
-    color: var(--success);
-    font-weight: 500;
-    margin-top: 8px;
-  }
+  .file-drop .file-icon { width: 32px; height: 32px; margin: 0 auto 8px; color: var(--ink-3); }
+  .file-name { display: none; font-size: 13px; color: var(--success); font-weight: 500; margin-top: 8px; }
   .file-name.show { display: block; }
 
   /* OR DIVIDER */
   .or-divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 1rem 0;
-    color: var(--ink-3);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px; margin: 1rem 0;
+    color: var(--ink-3); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.06em; text-transform: uppercase;
   }
-  .or-divider::before, .or-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  .or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* OUTPUT FORMAT */
-  .format-grid {
-    display: flex;
-    gap: 10px;
-  }
+  /* SECTION OPTIONS */
+  .format-grid { display: flex; gap: 10px; }
   .format-option {
-    flex: 1;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--surface);
+    flex: 1; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 14px; cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; gap: 10px; background: var(--surface);
   }
   .format-option:hover { border-color: var(--border-strong); background: #fff; }
-  .format-option.selected {
-    border-color: var(--accent);
-    background: var(--accent-light);
-  }
+  .format-option.selected { border-color: var(--accent); background: var(--accent-light); }
   .format-radio {
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    border: 2px solid var(--border-strong);
-    flex-shrink: 0;
-    transition: all 0.15s;
-    position: relative;
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--border-strong); flex-shrink: 0;
+    transition: all 0.15s; position: relative;
   }
-  .format-option.selected .format-radio {
-    border-color: var(--accent);
-    background: var(--accent);
-  }
+  .format-option.selected .format-radio { border-color: var(--accent); background: var(--accent); }
   .format-option.selected .format-radio::after {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%,-50%);
-    width: 6px; height: 6px;
-    background: #fff;
-    border-radius: 50%;
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%); width: 6px; height: 6px;
+    background: #fff; border-radius: 50%;
   }
   .format-label { font-size: 13px; font-weight: 500; }
   .format-desc { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
 
   /* SUBMIT */
-  .submit-area {
-    margin-top: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  .submit-area { margin-top: 1.5rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
   .btn-generate {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 28px;
-    height: 48px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 15px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-    overflow: hidden;
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 28px; height: 48px; background: var(--accent); color: #fff;
+    border: none; border-radius: var(--radius-sm); font-size: 15px;
+    font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer;
+    transition: all 0.15s; overflow: hidden;
   }
-  .btn-generate:hover { background: #2444c0; }
+  .btn-generate:hover { background: #25a0c4; }
   .btn-generate:active { transform: scale(0.98); }
-  .btn-generate:disabled {
-    background: var(--ink-3);
-    cursor: not-allowed;
-    transform: none;
-  }
+  .btn-generate:disabled { background: var(--ink-3); cursor: not-allowed; transform: none; }
   .btn-generate svg { width: 18px; height: 18px; }
+  .submit-note { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
 
-  .submit-note {
-    font-size: 12px;
-    color: var(--ink-3);
-    line-height: 1.5;
-  }
-
-  /* LOADING STATE */
+  /* LOADING */
   .loading-card {
-    display: none;
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 2.5rem 1.5rem;
-    text-align: center;
-    margin-top: 1.25rem;
+    display: none; background: var(--surface-card);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 2.5rem 1.5rem; text-align: center; margin-top: 1.25rem;
   }
   .loading-card.show { display: block; }
   .spinner {
-    width: 40px; height: 40px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    margin: 0 auto 1.25rem;
-    animation: spin 0.8s linear infinite;
+    width: 40px; height: 40px; border: 3px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    margin: 0 auto 1.25rem; animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-title {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 6px;
-  }
-  .loading-desc {
-    font-size: 13px;
-    color: var(--ink-3);
-    margin-bottom: 1.5rem;
-  }
-  .progress-steps {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
+  .loading-title { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
+  .loading-desc { font-size: 13px; color: var(--ink-3); margin-bottom: 1.5rem; }
+  .progress-steps { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
   .progress-step {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    padding: 5px 12px;
-    font-size: 12px;
-    color: var(--ink-3);
-    transition: all 0.3s;
+    display: flex; align-items: center; gap: 6px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 100px; padding: 5px 12px; font-size: 12px;
+    color: var(--ink-3); transition: all 0.3s;
   }
-  .progress-step.active {
-    background: var(--accent-light);
-    border-color: var(--accent);
-    color: var(--accent);
-    font-weight: 500;
-  }
-  .progress-step.done {
-    background: var(--success-bg);
-    border-color: var(--success);
-    color: var(--success);
-  }
-  .progress-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    animation: none;
-  }
-  .progress-step.active .progress-dot {
-    animation: pulse 1s ease-in-out infinite;
-  }
+  .progress-step.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+  .progress-step.done { background: var(--success-bg); border-color: var(--success); color: var(--success); }
+  .progress-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .progress-step.active .progress-dot { animation: pulse 1s ease-in-out infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
   /* RESULT */
-  .result-card {
-    display: none;
-    background: var(--surface-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-top: 1.25rem;
-  }
+  .result-card { display: none; background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-top: 1.25rem; }
   .result-card.show { display: block; }
-  .result-header {
-    background: var(--success-bg);
-    border-bottom: 1px solid rgba(15,110,86,0.15);
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .result-icon {
-    width: 40px; height: 40px;
-    background: var(--success);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
+  .result-header { background: var(--success-bg); border-bottom: 1px solid rgba(15,110,86,0.15); padding: 1.25rem 1.5rem; display: flex; align-items: center; gap: 12px; }
+  .result-icon { width: 40px; height: 40px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .result-icon svg { width: 20px; height: 20px; color: #fff; }
-  .result-title {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--success);
-  }
+  .result-title { font-size: 16px; font-weight: 500; color: var(--success); }
   .result-subtitle { font-size: 13px; color: rgba(15,110,86,0.7); margin-top: 2px; }
   .result-body { padding: 1.5rem; }
-  .result-file {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.25rem;
-  }
-  .file-thumb {
-    width: 44px; height: 52px;
-    background: #185FA5;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 10px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: 0.05em;
-  }
+  .result-file { display: flex; align-items: center; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+  .file-thumb { width: 44px; height: 52px; background: #185FA5; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; font-weight: 700; color: #fff; letter-spacing: 0.05em; }
   .file-info { flex: 1; min-width: 0; }
-  .file-info-name {
-    font-size: 14px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  .file-info-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .file-info-meta { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
   .btn-download {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 18px;
-    height: 40px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-    text-decoration: none;
-    flex-shrink: 0;
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 18px; height: 40px; background: var(--accent); color: #fff;
+    border: none; border-radius: var(--radius-sm); font-size: 13px;
+    font-family: 'DM Sans', sans-serif; font-weight: 500; cursor: pointer;
+    transition: background 0.15s; text-decoration: none; flex-shrink: 0;
   }
-  .btn-download:hover { background: #2444c0; }
+  .btn-download:hover { background: #25a0c4; }
   .btn-download svg { width: 16px; height: 16px; }
-
-  .sections-preview {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .section-pill {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: var(--ink-2);
-  }
-  .section-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-  }
-
+  .sections-preview { display: flex; flex-direction: column; gap: 8px; }
+  .section-pill { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-2); }
+  .section-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
   .btn-new {
-    margin-top: 1rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0 16px;
-    height: 36px;
-    background: transparent;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--ink-2);
-    cursor: pointer;
-    transition: all 0.15s;
+    margin-top: 1rem; display: inline-flex; align-items: center; gap: 6px;
+    padding: 0 16px; height: 36px; background: transparent;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--ink-2);
+    cursor: pointer; transition: all 0.15s;
   }
   .btn-new:hover { background: var(--surface); }
 
   /* ERROR */
-  .error-card {
-    display: none;
-    background: var(--danger-bg);
-    border: 1px solid rgba(163,45,45,0.2);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    margin-top: 1.25rem;
-    display: none;
-    align-items: flex-start;
-    gap: 12px;
-  }
+  .error-card { display: none; background: var(--danger-bg); border: 1px solid rgba(163,45,45,0.2); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-top: 1.25rem; align-items: flex-start; gap: 12px; }
   .error-card.show { display: flex; }
   .error-card svg { width: 18px; height: 18px; color: var(--danger); flex-shrink: 0; margin-top: 1px; }
   .error-text { font-size: 14px; color: var(--danger); }
   .error-text strong { display: block; font-weight: 500; margin-bottom: 4px; }
 
   /* FOOTER */
-  footer {
-    text-align: center;
-    padding: 2rem;
-    font-size: 12px;
-    color: var(--ink-3);
-    border-top: 1px solid var(--border);
-    background: var(--surface-card);
-  }
+  footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--ink-3); border-top: 1px solid var(--border); background: var(--surface-card); }
 
   @media (max-width: 560px) {
     main { padding: 1.5rem 1rem 3rem; }
     .format-grid { flex-direction: column; }
     .url-row { flex-direction: column; }
     .btn-save-url { width: 100%; justify-content: center; }
-    .steps-inner { gap: 0; overflow-x: auto; padding-bottom: 2px; }
+    .steps-inner { overflow-x: auto; padding-bottom: 2px; }
+    .header-inner { flex-direction: column; gap: 1rem; }
+    .header-logo-mark img { height: 40px; }
   }
 </style>
+<script>
+  (function() {
+    const img = new Image();
+    img.onload = function() {
+      const size = 64;
+      const pad = 8;
+      const canvas = document.createElement('canvas');
+      canvas.width = canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#263C4E';
+      ctx.beginPath();
+      ctx.roundRect(0, 0, size, size, 12);
+      ctx.fill();
+      const aspect = img.width / img.height;
+      const area = size - pad * 2;
+      const w = aspect >= 1 ? area : area * aspect;
+      const h = aspect >= 1 ? area / aspect : area;
+      ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+      document.getElementById('favicon').href = canvas.toDataURL('image/png');
+    };
+    img.src = 'assets/img/IPIFS_simbolo1.png';
+  })();
+</script>
 </head>
 <body>
 
+<!-- PASSWORD GATE -->
+<div id="password-gate">
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="assets/img/IPIFS_vertical1.3.png" alt="IPIFS Psicanálise" style="width:160px;height:auto;">
+    </div>
+    <label class="login-label" for="pw-input">Senha de acesso</label>
+    <div class="login-input-wrap">
+      <input type="password" id="pw-input" class="login-input" placeholder="••••••••••••" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="current-password">
+      <button class="login-toggle-pw" type="button" onclick="togglePw()" title="Mostrar/ocultar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Entrar</button>
+    <div class="login-error" id="login-error">Senha incorreta. Tente novamente.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
 <header>
   <div class="header-inner">
-    <div class="header-badge">
-      <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="4" fill="#a8b8ff"/></svg>
-      IPIFS — Sistema Pedagógico
+    <div class="header-logo-mark">
+      <img src="assets/img/IPIFS_simbolo1.2.png" alt="IPIFS">
     </div>
-    <h1>Gerador de <em>Material Didático</em></h1>
-    <p>Cole a transcrição da aula e receba um documento Word completo com resumo, material pedagógico e banco de questões.</p>
+    <div class="header-text">
+      <div class="header-badge">
+        <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#30B0D5"/></svg>
+        IPIFS — Sistema Pedagógico
+      </div>
+      <h1>Gerador de <em>Material Didático</em></h1>
+      <p>Cole a transcrição da aula e receba um documento Word completo com resumo, material pedagógico e banco de questões.</p>
+    </div>
   </div>
 </header>
 
 <div class="steps-bar">
   <div class="steps-inner">
-    <div class="step-item active" id="step1">
-      <div class="step-num">1</div>
-      Transcrição
-    </div>
+    <div class="step-item active" id="step1"><div class="step-num">1</div>Transcrição</div>
     <span class="step-sep">›</span>
-    <div class="step-item" id="step2">
-      <div class="step-num">2</div>
-      Processando
-    </div>
+    <div class="step-item" id="step2"><div class="step-num">2</div>Processando</div>
     <span class="step-sep">›</span>
-    <div class="step-item" id="step3">
-      <div class="step-num">3</div>
-      Download
-    </div>
+    <div class="step-item" id="step3"><div class="step-num">3</div>Download</div>
   </div>
 </div>
 
 <main>
 
-  <!-- CONFIG CARD -->
   <div class="card" id="config-card">
     <div class="card-header">
       <div class="card-icon">
@@ -726,7 +506,6 @@
     </div>
   </div>
 
-  <!-- INPUT CARD -->
   <div class="card" id="input-card">
     <div class="card-header">
       <div class="card-icon">
@@ -754,35 +533,26 @@ O sistema irá gerar automaticamente:
         <div class="file-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </div>
-        <strong style="font-size:14px; font-weight:500;">Arraste ou clique para enviar</strong>
+        <strong style="font-size:14px;font-weight:500;">Arraste ou clique para enviar</strong>
         <p>Arquivos .txt, .md ou .docx</p>
         <input type="file" id="file-input" accept=".txt,.md,.docx" style="display:none" onchange="handleFile(this)">
       </div>
       <div class="file-name" id="file-name"></div>
 
-      <div style="margin-top: 1.5rem;">
-        <div style="font-size: 13px; font-weight: 500; margin-bottom: 10px; color: var(--ink-2);">Seções a gerar</div>
+      <div style="margin-top:1.5rem;">
+        <div style="font-size:13px;font-weight:500;margin-bottom:10px;color:var(--ink-2);">Seções a gerar</div>
         <div class="format-grid">
-          <div class="format-option selected" onclick="toggleSection(this, 'resumo')" data-section="resumo">
+          <div class="format-option selected" onclick="toggleSection(this)" data-section="resumo">
             <div class="format-radio"></div>
-            <div>
-              <div class="format-label">Resumo da aula</div>
-              <div class="format-desc">Título + tópicos explicados</div>
-            </div>
+            <div><div class="format-label">Resumo da aula</div><div class="format-desc">Título + tópicos explicados</div></div>
           </div>
-          <div class="format-option selected" onclick="toggleSection(this, 'material')" data-section="material">
+          <div class="format-option selected" onclick="toggleSection(this)" data-section="material">
             <div class="format-radio"></div>
-            <div>
-              <div class="format-label">Material pedagógico</div>
-              <div class="format-desc">Texto acadêmico formal</div>
-            </div>
+            <div><div class="format-label">Material pedagógico</div><div class="format-desc">Texto acadêmico formal</div></div>
           </div>
-          <div class="format-option selected" onclick="toggleSection(this, 'forum')" data-section="forum">
+          <div class="format-option selected" onclick="toggleSection(this)" data-section="forum">
             <div class="format-radio"></div>
-            <div>
-              <div class="format-label">Fórum + questões</div>
-              <div class="format-desc">Fórum e 6 questões técnicas</div>
-            </div>
+            <div><div class="format-label">Fórum + questões</div><div class="format-desc">Fórum e 6 questões técnicas</div></div>
           </div>
         </div>
       </div>
@@ -792,43 +562,24 @@ O sistema irá gerar automaticamente:
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           Gerar material
         </button>
-        <div class="submit-note">
-          O processamento leva entre<br>30 e 90 segundos.
-        </div>
+        <div class="submit-note">O processamento leva entre<br>30 e 90 segundos.</div>
       </div>
     </div>
   </div>
 
-  <!-- LOADING -->
   <div class="loading-card" id="loading-card">
     <div class="spinner"></div>
     <div class="loading-title">Gerando seu material...</div>
     <div class="loading-desc" id="loading-desc">Enviando transcrição para o N8N</div>
     <div class="progress-steps">
-      <div class="progress-step active" id="ps-envio">
-        <div class="progress-dot"></div>
-        Enviando
-      </div>
-      <div class="progress-step" id="ps-resumo">
-        <div class="progress-dot"></div>
-        Resumo da aula
-      </div>
-      <div class="progress-step" id="ps-material">
-        <div class="progress-dot"></div>
-        Material pedagógico
-      </div>
-      <div class="progress-step" id="ps-forum">
-        <div class="progress-dot"></div>
-        Fórum e questões
-      </div>
-      <div class="progress-step" id="ps-docx">
-        <div class="progress-dot"></div>
-        Montando .docx
-      </div>
+      <div class="progress-step active" id="ps-envio"><div class="progress-dot"></div>Enviando</div>
+      <div class="progress-step" id="ps-resumo"><div class="progress-dot"></div>Resumo da aula</div>
+      <div class="progress-step" id="ps-material"><div class="progress-dot"></div>Material pedagógico</div>
+      <div class="progress-step" id="ps-forum"><div class="progress-dot"></div>Fórum e questões</div>
+      <div class="progress-step" id="ps-docx"><div class="progress-dot"></div>Montando .docx</div>
     </div>
   </div>
 
-  <!-- ERROR -->
   <div class="error-card" id="error-card">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     <div class="error-text">
@@ -837,7 +588,6 @@ O sistema irá gerar automaticamente:
     </div>
   </div>
 
-  <!-- RESULT -->
   <div class="result-card" id="result-card">
     <div class="result-header">
       <div class="result-icon">
@@ -871,17 +621,43 @@ O sistema irá gerar automaticamente:
 </main>
 
 <footer>
-  IPIFS — Sistema de Geração de Material Didático &nbsp;·&nbsp; Powered by N8N + Claude AI
+  IPIFS Psicanálise &nbsp;·&nbsp; Sistema de Geração de Material Didático &nbsp;·&nbsp; Powered by Fitz Digital
 </footer>
+
+</div><!-- #app -->
 
 <script>
   const STORAGE_KEY = 'ipifs_webhook_url';
+  const AUTH_KEY = 'ipifs_auth';
+  const CORRECT_PW = 'ipifsadm@123';
 
-  window.addEventListener('load', () => {
+  (function() {
+    if (sessionStorage.getItem(AUTH_KEY) === '1') initApp();
+  })();
+
+  function doLogin() {
+    const val = document.getElementById('pw-input').value;
+    if (val === CORRECT_PW) {
+      sessionStorage.setItem(AUTH_KEY, '1');
+      initApp();
+    } else {
+      document.getElementById('login-error').classList.add('show');
+      document.getElementById('pw-input').select();
+    }
+  }
+
+  function togglePw() {
+    const input = document.getElementById('pw-input');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function initApp() {
+    document.getElementById('password-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) document.getElementById('webhook-url').value = saved;
     setupDrag();
-  });
+  }
 
   function saveUrl() {
     const url = document.getElementById('webhook-url').value.trim();
@@ -899,9 +675,7 @@ O sistema irá gerar automaticamente:
     el.style.color = len > 500 ? 'var(--success)' : 'var(--ink-3)';
   }
 
-  function toggleSection(el, section) {
-    el.classList.toggle('selected');
-  }
+  function toggleSection(el) { el.classList.toggle('selected'); }
 
   function setupDrag() {
     const drop = document.getElementById('file-drop');
@@ -915,9 +689,7 @@ O sistema irá gerar automaticamente:
     });
   }
 
-  function handleFile(input) {
-    if (input.files[0]) processFile(input.files[0]);
-  }
+  function handleFile(input) { if (input.files[0]) processFile(input.files[0]); }
 
   function processFile(file) {
     const nameEl = document.getElementById('file-name');
@@ -955,20 +727,11 @@ O sistema irá gerar automaticamente:
     const url = document.getElementById('webhook-url').value.trim();
     const texto = document.getElementById('transcricao').value.trim();
 
-    if (!url) {
-      showError('URL do webhook não configurada', 'Preencha a URL do seu workflow N8N no campo acima e salve antes de continuar.');
-      return;
-    }
-    if (!texto || texto.length < 50) {
-      showError('Transcrição muito curta', 'Por favor, cole um texto com pelo menos 50 caracteres para processamento.');
-      return;
-    }
+    if (!url) { showError('URL do webhook não configurada', 'Preencha a URL do seu workflow N8N no campo acima e salve antes de continuar.'); return; }
+    if (!texto || texto.length < 50) { showError('Transcrição muito curta', 'Por favor, cole um texto com pelo menos 50 caracteres para processamento.'); return; }
 
     const secoes = [...document.querySelectorAll('.format-option.selected')].map(el => el.dataset.section);
-    if (secoes.length === 0) {
-      showError('Nenhuma seção selecionada', 'Selecione ao menos uma seção para gerar.');
-      return;
-    }
+    if (secoes.length === 0) { showError('Nenhuma seção selecionada', 'Selecione ao menos uma seção para gerar.'); return; }
 
     document.getElementById('input-card').style.opacity = '0.4';
     document.getElementById('input-card').style.pointerEvents = 'none';
@@ -979,11 +742,11 @@ O sistema irá gerar automaticamente:
     setStep(2);
 
     const steps = [
-      { id: 'ps-envio', delay: 0, desc: 'Enviando transcrição para o N8N...' },
-      { id: 'ps-resumo', delay: 3000, desc: 'Gerando resumo da aula...' },
+      { id: 'ps-envio',    delay: 0,     desc: 'Enviando transcrição para o N8N...' },
+      { id: 'ps-resumo',   delay: 3000,  desc: 'Gerando resumo da aula...' },
       { id: 'ps-material', delay: 12000, desc: 'Redigindo material pedagógico...' },
-      { id: 'ps-forum', delay: 22000, desc: 'Criando fórum e questões...' },
-      { id: 'ps-docx', delay: 40000, desc: 'Montando o arquivo .docx...' },
+      { id: 'ps-forum',    delay: 22000, desc: 'Criando fórum e questões...' },
+      { id: 'ps-docx',     delay: 40000, desc: 'Montando o arquivo .docx...' },
     ];
 
     const timers = steps.map(s => setTimeout(() => {
@@ -999,18 +762,13 @@ O sistema irá gerar automaticamente:
       });
 
       timers.forEach(t => clearTimeout(t));
-
       if (!res.ok) throw new Error(`Servidor retornou status ${res.status}`);
 
       const data = await res.json();
-
-      if (!data.file_base64 && !data.docxBase64) {
-        throw new Error('O servidor não retornou o arquivo. Verifique o workflow N8N.');
-      }
+      if (!data.file_base64 && !data.docxBase64) throw new Error('O servidor não retornou o arquivo. Verifique o workflow N8N.');
 
       const b64 = data.file_base64 || data.docxBase64;
       const filename = data.filename || `IPIFS_Material_${Date.now()}.docx`;
-
       const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
       const blob = new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
       const dlUrl = URL.createObjectURL(blob);
@@ -1018,24 +776,19 @@ O sistema irá gerar automaticamente:
       document.getElementById('result-filename').textContent = filename;
       document.getElementById('result-meta').textContent = `Documento Word • ${secoes.length} seção(ões) gerada(s)`;
       document.getElementById('result-subtitle').textContent = `Gerado em ${new Date().toLocaleTimeString('pt-BR')}`;
-      
+
       const btn = document.getElementById('btn-download');
       btn.href = dlUrl;
       btn.download = filename;
 
-      const preview = document.getElementById('sections-preview');
       const labels = { resumo: 'Resumo da aula', material: 'Material pedagógico', forum: 'Fórum individual + banco de questões' };
-      preview.innerHTML = secoes.map(s => `
-        <div class="section-pill">
-          <div class="section-dot"></div>
-          ${labels[s] || s}
-        </div>
+      document.getElementById('sections-preview').innerHTML = secoes.map(s => `
+        <div class="section-pill"><div class="section-dot"></div>${labels[s] || s}</div>
       `).join('');
 
       document.getElementById('loading-card').classList.remove('show');
       document.getElementById('result-card').classList.add('show');
       setStep(3);
-
       btn.click();
 
     } catch (err) {
